@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button"
-import { Search, Menu, TrendingUp, Zap } from "lucide-react"
+import { Search, Menu, Zap } from "lucide-react"
 import { Input } from "@/components/ui/input"
+import Image from "next/image"
 
 export function Header() {
   return (
@@ -8,9 +9,13 @@ export function Header() {
       <div className="container flex h-16 items-center justify-between px-6">
         <div className="flex items-center space-x-8">
           <div className="flex items-center space-x-3">
-            <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center glow-effect">
-              <TrendingUp className="h-5 w-5 text-primary-foreground" />
-            </div>
+            <Image 
+              src="/ClariFi.png" 
+              alt="ClariFi Logo" 
+              width={36} 
+              height={36}
+              className="rounded-xl glow-effect"
+            />
             <span className="font-sans font-bold text-2xl text-foreground text-glow">ClariFi</span>
             <div className="hidden sm:flex items-center space-x-1 px-2 py-1 rounded-full bg-primary/10 border border-primary/20">
               <Zap className="h-3 w-3 text-primary" />
