@@ -1,0 +1,27 @@
+{
+  "includeCoAuthoredBy": false,
+  "permissions": {
+    "allow": [
+      "Bash(npm install)",
+      "Bash(npm install:*)",
+      "Bash(npm run dev:*)",
+      "Bash(npm view:*)",
+      "Bash(npm run lint)",
+      "Bash(npm run build:*)",
+      "Bash(npx tsc:*)",
+      "Bash(git init:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(npx supabase:*)",
+      "Bash(mkdir:*)",
+      "Bash(node:*)",
+      "Bash(npm uninstall:*)",
+      "mcp__ide__getDiagnostics",
+      "Bash(git remote add:*)",
+      "Bash(git push:*)",
+      "Bash(git filter-branch:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
