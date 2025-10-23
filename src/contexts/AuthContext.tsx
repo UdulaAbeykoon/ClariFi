@@ -1,7 +1,6 @@
 import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
 import { User } from '@supabase/supabase-js';
-import { supabase } from '@/integrations/supabase/client';
-import { api } from '@/lib/api';
+import { supabase } from '@/lib/supabaseClient';
 
 interface AuthUser {
   id: string;
@@ -34,13 +33,25 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [initialized, setInitialized] = useState(false);
 
   const refreshUser = useCallback(async () => {
+    if (!supabase) {
+      setUser(null);
+      setLoading(false);
+      return;
+    }
+
     try {
       setLoading(true);
       const { data: { session } } = await supabase.auth.getSession();
-      
+
       if (session?.user) {
-        const currentUser = await api.getCurrentUser();
-        setUser(currentUser);
+        const user = session.user;
+        const authUser = {
+          id: user.id,
+          email: user.email!,
+          name: user.user_metadata?.name || user.email?.split('@')[0] || 'User',
+          picture: user.user_metadata?.avatar_url || `https://api.dicebear.com/7.x/initials/svg?seed=${user.email}`
+        };
+        setUser(authUser);
       } else {
         setUser(null);
       }
@@ -53,15 +64,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   useEffect(() => {
+    if (!supabase) {
+      setUser(null);
+      setLoading(false);
+      setInitialized(true);
+      return;
+    }
+
     let isMounted = true;
 
     const initializeAuth = async () => {
       try {
         setLoading(true);
-        
-        // Wait for session to be fully restored
+
         const { data: { session }, error } = await supabase.auth.getSession();
-        
+
         if (error) {
           console.error('Auth session error:', error);
           if (isMounted) {
@@ -71,11 +88,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           }
           return;
         }
-        
+
         if (!isMounted) return;
-        
+
         if (session?.user) {
-          // Create user object directly from session instead of API call
           const user = session.user;
           const authUser = {
             id: user.id,
@@ -83,7 +99,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             name: user.user_metadata?.name || user.email?.split('@')[0] || 'User',
             picture: user.user_metadata?.avatar_url || `https://api.dicebear.com/7.x/initials/svg?seed=${user.email}`
           };
-          
+
           if (isMounted) {
             setUser(authUser);
           }
@@ -107,22 +123,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     initializeAuth();
 
-    // Listen for auth state changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         if (!isMounted) return;
-        
-        // Handle sign out immediately
+
         if (event === 'SIGNED_OUT' || !session?.user) {
           setUser(null);
           setLoading(false);
           return;
         }
-        
-        // Handle sign in and token refresh
+
         if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
           setLoading(true);
-          
+
           try {
             const user = session.user;
             const authUser = {
@@ -131,7 +144,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
               name: user.user_metadata?.name || user.email?.split('@')[0] || 'User',
               picture: user.user_metadata?.avatar_url || `https://api.dicebear.com/7.x/initials/svg?seed=${user.email}`
             };
-            
+
             if (isMounted) {
               setUser(authUser);
             }
@@ -156,9 +169,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   const signOut = async () => {
+    if (!supabase) return;
+
     setLoading(true);
     try {
-      await api.signOut();
+      await supabase.auth.signOut();
       setUser(null);
     } catch (error) {
       console.error('Sign out error:', error);

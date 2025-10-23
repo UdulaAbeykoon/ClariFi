@@ -10,7 +10,7 @@ const modules = [
     icon: TrendingUp,
     description: "Master the art of valuing companies using DCF models, comparable analysis, and precedent transactions. Learn essential techniques used by investment professionals.",
     topics: ["DCF Analysis", "Comparable Companies", "Precedent Transactions", "LBO Models"],
-    color: "from-blue-500 to-blue-600"
+    color: "from-[#174978] to-[#2F5F8A]"
   },
   {
     id: "accounting",
@@ -18,7 +18,7 @@ const modules = [
     icon: Calculator,
     description: "Build a solid foundation in financial accounting principles, statements analysis, and managerial accounting for strategic decision making.",
     topics: ["Financial Statements", "Ratio Analysis", "Cost Accounting", "Budgeting"],
-    color: "from-emerald-500 to-emerald-600"
+    color: "from-[#46798B] to-[#5E8CAD]"
   },
   {
     id: "marketing",
@@ -26,7 +26,7 @@ const modules = [
     icon: Megaphone,
     description: "Explore modern marketing strategies, consumer behavior, digital marketing, and brand management in today's competitive landscape.",
     topics: ["Consumer Behavior", "Digital Marketing", "Brand Strategy", "Market Research"],
-    color: "from-purple-500 to-purple-600"
+    color: "from-[#5E8CAD] to-[#75A2BF]"
   }
 ];
 
@@ -35,11 +35,11 @@ const ModuleCards = () => {
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
       {modules.map((module) => {
         const Icon = module.icon;
-        
+
         return (
-          <Card 
-            key={module.id} 
-            className="group hover:shadow-elegant transition-smooth border-border bg-gradient-card hover:border-primary/20 overflow-hidden"
+          <Card
+            key={module.id}
+            className="group border-border bg-gradient-card overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-lg"
           >
             <CardContent className="p-0">
               {/* Header with gradient */}
@@ -63,7 +63,7 @@ const ModuleCards = () => {
                   </h4>
                   <div className="grid grid-cols-2 gap-2">
                     {module.topics.map((topic, index) => (
-                      <div 
+                      <div
                         key={index}
                         className="text-sm text-foreground bg-muted/50 rounded-md px-3 py-2 text-center"
                       >
@@ -74,7 +74,7 @@ const ModuleCards = () => {
                 </div>
 
                 <Link to={`/module/${module.id}`} className="block">
-                  <Button 
+                  <Button
                     className="w-full group-hover:shadow-glow transition-smooth bg-gradient-primary"
                     size="lg"
                   >
